@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PADEL MOMENT - Премиум клуб падел-тенниса</title>
+    <title>PADEL MOMENT - Премиум клуб падел-тенниса и магазин</title>
     <style>
         * {
             margin: 0;
@@ -48,16 +48,40 @@
             display: flex;
             list-style: none;
             gap: 2rem;
+            align-items: center;
         }
 
         .nav-links a {
             color: white;
             text-decoration: none;
             transition: opacity 0.3s;
+            cursor: pointer;
         }
 
         .nav-links a:hover {
             opacity: 0.8;
+        }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #ff6b6b;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
         }
 
         /* Hero Section */
@@ -95,6 +119,9 @@
             border-radius: 50px;
             transition: transform 0.3s, box-shadow 0.3s;
             margin: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
         }
 
         .btn:hover {
@@ -107,11 +134,24 @@
             border: 2px solid white;
         }
 
+        .btn-success {
+            background: #4CAF50;
+        }
+
+        .btn-danger {
+            background: #f44336;
+        }
+
         /* Sections */
         section {
             padding: 5rem 2rem;
             max-width: 1200px;
             margin: 0 auto;
+            display: none;
+        }
+
+        section.active {
+            display: block;
         }
 
         .section-title {
@@ -122,10 +162,6 @@
         }
 
         /* About */
-        .about {
-            background: #f8f9fa;
-        }
-
         .features {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -225,34 +261,232 @@
             margin-right: 0.5rem;
         }
 
-        /* Contact */
-        .contact {
-            background: #f8f9fa;
+        /* Shop Section */
+        .shop-filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
         }
 
-        .contact-content {
+        .filter-btn {
+            padding: 0.8rem 1.5rem;
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 3rem;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
         }
 
-        .contact-info h3 {
-            margin-bottom: 1.5rem;
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-category {
+            color: #667eea;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .product-description {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-price {
+            font-size: 1.8rem;
+            font-weight: bold;
             color: #667eea;
         }
 
-        .contact-item {
-            margin-bottom: 1.5rem;
+        .add-to-cart {
+            padding: 0.6rem 1.2rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .add-to-cart:hover {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+
+        /* Cart Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .cart-item {
             display: flex;
             align-items: center;
             gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
         }
 
-        .contact-form {
-            background: white;
-            padding: 2rem;
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .cart-item-price {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .qty-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1.2rem;
+        }
+
+        .qty-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .remove-item {
+            color: #f44336;
+            cursor: pointer;
+            font-size: 1.5rem;
+            padding: 0.5rem;
+        }
+
+        .cart-total {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 2px solid #667eea;
+            text-align: right;
+        }
+
+        .cart-total h3 {
+            font-size: 2rem;
+            color: #667eea;
+        }
+
+        .checkout-form {
+            margin-top: 2rem;
         }
 
         .form-group {
@@ -276,10 +510,110 @@
             font-family: inherit;
         }
 
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Booking Section */
+        .booking-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .court-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .court-card {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .court-card:hover {
             border-color: #667eea;
+            transform: translateY(-3px);
+        }
+
+        .court-card.selected {
+            border-color: #667eea;
+            background: #f0f3ff;
+        }
+
+        .court-card h4 {
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .court-card p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.8rem;
+            margin: 2rem 0;
+        }
+
+        .time-slot {
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .time-slot:hover {
+            border-color: #667eea;
+        }
+
+        .time-slot.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .time-slot.booked {
+            background: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+            border-color: #ddd;
+        }
+
+        /* Contact */
+        .contact {
+            background: #f8f9fa;
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+        }
+
+        .contact-info h3 {
+            margin-bottom: 1.5rem;
+            color: #667eea;
+        }
+
+        .contact-item {
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         /* Footer */
@@ -288,6 +622,7 @@
             color: white;
             text-align: center;
             padding: 2rem;
+            margin-top: 3rem;
         }
 
         .social-links {
@@ -324,6 +659,40 @@
             .hero-content p {
                 font-size: 1.2rem;
             }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 3000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .notification.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
     </style>
 </head>
@@ -334,27 +703,33 @@
         <nav>
             <div class="logo">🎾 PADEL MOMENT</div>
             <ul class="nav-links">
-                <li><a href="#home">Главная</a></li>
-                <li><a href="#about">О нас</a></li>
-                <li><a href="#pricing">Цены</a></li>
-                <li><a href="#contact">Контакты</a></li>
+                <li><a onclick="showSection('home')">Главная</a></li>
+                <li><a onclick="showSection('about')">О нас</a></li>
+                <li><a onclick="showSection('pricing')">Цены</a></li>
+                <li><a onclick="showSection('booking')">Запись</a></li>
+                <li><a onclick="showSection('shop')">Магазин</a></li>
+                <li><a onclick="showSection('contact')">Контакты</a></li>
+                <li class="cart-icon" onclick="toggleCart()">
+                    🛒
+                    <span class="cart-count" id="cartCount">0</span>
+                </li>
             </ul>
             <div class="mobile-menu">☰</div>
         </nav>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
+    <!-- Home Section -->
+    <section class="hero" id="home" style="display: block;">
         <div class="hero-content">
             <h1>PADEL MOMENT</h1>
-            <p>Премиум клуб падел-тенниса</p>
-            <a href="#contact" class="btn">Записаться</a>
-            <a href="#pricing" class="btn btn-outline">Наши цены</a>
+            <p>Премиум клуб падел-тенниса и магазин</p>
+            <a onclick="showSection('booking')" class="btn">Записаться на игру</a>
+            <a onclick="showSection('shop')" class="btn btn-outline">Перейти в магазин</a>
         </div>
     </section>
 
     <!-- About Section -->
-    <section class="about" id="about">
+    <section id="about">
         <h2 class="section-title">Почему выбирают нас</h2>
         <div class="features">
             <div class="feature-card">
@@ -368,9 +743,9 @@
                 <p>Индивидуальный подход и профессиональные программы</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">🚿</div>
-                <h3>Комфортные раздевалки</h3>
-                <p>Душевые, сауна и зона отдыха</p>
+                <div class="feature-icon">🛒</div>
+                <h3>Собственный магазин</h3>
+                <p>Всё оборудование и экипировка в одном месте</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">🏆</div>
@@ -393,7 +768,7 @@
                     <li>Душевые и раздевалки</li>
                     <li>Парковка</li>
                 </ul>
-                <a href="#contact" class="btn">Забронировать</a>
+                <a onclick="showSection('booking')" class="btn">Забронировать</a>
             </div>
             
             <div class="pricing-card featured">
@@ -406,7 +781,7 @@
                     <li>Анализ техники</li>
                     <li>Все принадлежности включены</li>
                 </ul>
-                <a href="#contact" class="btn">Записаться</a>
+                <a onclick="showSection('booking')" class="btn">Записаться</a>
             </div>
             
             <div class="pricing-card">
@@ -418,14 +793,96 @@
                     <li>Идеально для новичков</li>
                     <li>Весело и эффективно</li>
                 </ul>
-                <a href="#contact" class="btn">Записаться</a>
+                <a onclick="showSection('booking')" class="btn">Записаться</a>
             </div>
         </div>
     </section>
 
+    <!-- Booking Section -->
+    <section id="booking">
+        <h2 class="section-title">Запись на игру</h2>
+        <div class="booking-container">
+            <h3>Выберите тип услуги</h3>
+            <div class="form-group" style="margin-top: 1rem;">
+                <select id="serviceType" onchange="updateBooking()" style="width: 100%; padding: 1rem; font-size: 1rem;">
+                    <option value="rental">Аренда корта (2 000 ₽/час)</option>
+                    <option value="trainer">С тренером (12 000 ₽/час)</option>
+                    <option value="group">Групповое занятие (800 ₽/час)</option>
+                </select>
+            </div>
+
+            <h3 style="margin-top: 2rem;">Выберите корт</h3>
+            <div class="court-selector">
+                <div class="court-card selected" onclick="selectCourt(this)">
+                    <h4>Корт №1</h4>
+                    <p>Открытый, стандарт</p>
+                </div>
+                <div class="court-card" onclick="selectCourt(this)">
+                    <h4>Корт №2</h4>
+                    <p>Открытый, стандарт</p>
+                </div>
+                <div class="court-card" onclick="selectCourt(this)">
+                    <h4>Корт №3</h4>
+                    <p>Закрытый, премиум</p>
+                </div>
+                <div class="court-card" onclick="selectCourt(this)">
+                    <h4>Корт №4</h4>
+                    <p>Закрытый, премиум</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem;">Выберите время</h3>
+            <div class="time-slots" id="timeSlots">
+                <!-- Time slots will be generated by JavaScript -->
+            </div>
+
+            <div class="checkout-form" style="margin-top: 2rem;">
+                <h3>Ваши данные</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Имя</label>
+                        <input type="text" id="bookingName" placeholder="Иван Иванов" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Телефон</label>
+                        <input type="tel" id="bookingPhone" placeholder="+7 (999) 999-99-99" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="bookingEmail" placeholder="example@mail.ru">
+                </div>
+                <div class="form-group">
+                    <label>Комментарий</label>
+                    <textarea id="bookingComment" rows="3" placeholder="Дополнительная информация"></textarea>
+                </div>
+                <button onclick="submitBooking()" class="btn btn-success" style="width: 100%;">
+                    Подтвердить запись
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shop Section -->
+    <section id="shop">
+        <h2 class="section-title">Наш магазин</h2>
+        
+        <div class="shop-filters">
+            <button class="filter-btn active" onclick="filterProducts('all')">Все товары</button>
+            <button class="filter-btn" onclick="filterProducts('rackets')">Ракетки</button>
+            <button class="filter-btn" onclick="filterProducts('balls')">Мячи</button>
+            <button class="filter-btn" onclick="filterProducts('clothing')">Одежда</button>
+            <button class="filter-btn" onclick="filterProducts('accessories')">Аксессуары</button>
+        </div>
+
+        <div class="products-grid" id="productsGrid">
+            <!-- Products will be generated by JavaScript -->
+        </div>
+    </section>
+
     <!-- Contact Section -->
-    <section class="contact" id="contact">
-        <h2 class="section-title">Свяжитесь с нами</h2>
+    <section id="contact" class="contact">
+        <h2 class="section-title">Контакты</h2>
         <div class="contact-content">
             <div class="contact-info">
                 <h3>Контактная информация</h3>
@@ -460,40 +917,120 @@
             </div>
             
             <div class="contact-form">
-                <h3>Записаться на игру</h3>
-                <form>
+                <h3>Напишите нам</h3>
+                <form onsubmit="submitContactForm(event)">
                     <div class="form-group">
                         <label>Ваше имя</label>
-                        <input type="text" placeholder="Иван Иванов" required>
+                        <input type="text" required>
                     </div>
                     <div class="form-group">
-                        <label>Телефон</label>
-                        <input type="tel" placeholder="+7 (___) ___-__-__" required>
+                        <label>Email</label>
+                        <input type="email" required>
                     </div>
                     <div class="form-group">
-                        <label>Тип услуги</label>
-                        <select required>
-                            <option value="">Выберите услугу</option>
-                            <option value="rental">Аренда корта (2 000 ₽/час)</option>
-                            <option value="trainer">С тренером (12 000 ₽/час)</option>
-                            <option value="group">Групповое занятие (800 ₽/час)</option>
-                        </select>
+                        <label>Сообщение</label>
+                        <textarea rows="4" required></textarea>
                     </div>
-                    <div class="form-group">
-                        <label>Желаемая дата и время</label>
-                        <input type="datetime-local" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Комментарий</label>
-                        <textarea rows="3" placeholder="Дополнительная информация"></textarea>
-                    </div>
-                    <button type="submit" class="btn" style="width: 100%; border: none; cursor: pointer;">
-                        Отправить заявку
-                    </button>
+                    <button type="submit" class="btn" style="width: 100%;">Отправить</button>
                 </form>
             </div>
         </div>
     </section>
+
+    <!-- Cart Modal -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="toggleCart()">&times;</span>
+            <h2 style="margin-bottom: 2rem;">🛒 Корзина</h2>
+            <div id="cartItems">
+                <!-- Cart items will be generated by JavaScript -->
+            </div>
+            <div class="cart-total" id="cartTotal" style="display: none;">
+                <h3>Итого: <span id="totalPrice">0</span> ₽</h3>
+                <button onclick="checkout()" class="btn btn-success" style="margin-top: 1rem; width: 100%;">
+                    Оформить заказ
+                </button>
+            </div>
+            <div id="emptyCart" style="text-align: center; padding: 3rem; color: #999;">
+                <p style="font-size: 4rem; margin-bottom: 1rem;">🛒</p>
+                <p>Ваша корзина пуста</p>
+                <button onclick="toggleCart(); showSection('shop');" class="btn" style="margin-top: 1rem;">
+                    Перейти к покупкам
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="modal" id="checkoutModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeCheckout()">&times;</span>
+            <h2 style="margin-bottom: 2rem;">Оформление заказа</h2>
+            <form onsubmit="submitOrder(event)">
+                <h3>Контактная информация</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Имя *</label>
+                        <input type="text" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Фамилия *</label>
+                        <input type="text" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Телефон *</label>
+                        <input type="tel" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email *</label>
+                        <input type="email" required>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 2rem;">Доставка</h3>
+                <div class="form-group">
+                    <label>Город *</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-group">
+                    <label>Адрес доставки *</label>
+                    <textarea rows="2" required></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Индекс</label>
+                        <input type="text">
+                    </div>
+                    <div class="form-group">
+                        <label>Комментарий к заказу</label>
+                        <input type="text">
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem;">Оплата</h3>
+                <div class="form-group">
+                    <select required>
+                        <option value="">Выберите способ оплаты</option>
+                        <option value="card">Банковская карта</option>
+                        <option value="cash">Наличные при получении</option>
+                        <option value="online">Онлайн оплата</option>
+                    </select>
+                </div>
+
+                <div class="cart-total">
+                    <h3>Итого к оплате: <span id="checkoutTotal">0</span> ₽</h3>
+                    <button type="submit" class="btn btn-success" style="margin-top: 1rem; width: 100%;">
+                        Подтвердить заказ
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">Товар добавлен в корзину!</div>
 
     <!-- Footer -->
     <footer>
@@ -507,7 +1044,405 @@
     </footer>
 
     <script>
-        // Smooth scrolling
+        // Products Database
+        const products = [
+            // Rackets
+            {
+                id: 1,
+                name: "Bullpadel Vertex 03",
+                category: "rackets",
+                price: 18500,
+                description: "Профессиональная ракетка для агрессивной игры",
+                emoji: "🎾"
+            },
+            {
+                id: 2,
+                name: "Nox AT10 Genius",
+                category: "rackets",
+                price: 22000,
+                description: "Премиум ракетка с отличным контролем",
+                emoji: "🎾"
+            },
+            {
+                id: 3,
+                name: "Adidas Metalbone",
+                category: "rackets",
+                price: 16900,
+                description: "Идеальна для начинающих и среднего уровня",
+                emoji: "🎾"
+            },
+            {
+                id: 4,
+                name: "Head Delta Pro",
+                category: "rackets",
+                price: 19500,
+                description: "Мощь и точность в каждой игре",
+                emoji: "🎾"
+            },
+            // Balls
+            {
+                id: 5,
+                name: "Head Padel Pro (3 мяча)",
+                category: "balls",
+                price: 850,
+                description: "Официальные мячи для турниров",
+                emoji: "🟡"
+            },
+            {
+                id: 6,
+                name: "Bullpadel Hack 03 (3 мяча)",
+                category: "balls",
+                price: 750,
+                description: "Отличное соотношение цены и качества",
+                emoji: "🟡"
+            },
+            {
+                id: 7,
+                name: "Nox ML10 Pro (6 мячей)",
+                category: "balls",
+                price: 1400,
+                description: "Набор для тренировок",
+                emoji: "🟡"
+            },
+            // Clothing
+            {
+                id: 8,
+                name: "Футболка Joma Padel",
+                category: "clothing",
+                price: 2500,
+                description: "Дышащая спортивная футболка",
+                emoji: "👕"
+            },
+            {
+                id: 9,
+                name: "Шорты Adidas Padel",
+                category: "clothing",
+                price: 3200,
+                description: "Удобные шорты с карманами",
+                emoji: "🩳"
+            },
+            {
+                id: 10,
+                name: "Кроссовки Bullpadel",
+                category: "clothing",
+                price: 8900,
+                description: "Специализированная обувь для падела",
+                emoji: "👟"
+            },
+            {
+                id: 11,
+                name: "Джемпер Nike",
+                category: "clothing",
+                price: 4500,
+                description: "Теплый джемпер для тренировок",
+                emoji: "🧥"
+            },
+            // Accessories
+            {
+                id: 12,
+                name: "Сумка для ракеток",
+                category: "accessories",
+                price: 3500,
+                description: "Вместительная сумка на 2-4 ракетки",
+                emoji: "🎒"
+            },
+            {
+                id: 13,
+                name: "Овергрип (10 шт)",
+                category: "accessories",
+                price: 650,
+                description: "Набор сменных грипсов",
+                emoji: "📦"
+            },
+            {
+                id: 14,
+                name: "Защитная лента",
+                category: "accessories",
+                price: 450,
+                description: "Защита рамки ракетки",
+                emoji: "📏"
+            },
+            {
+                id: 15,
+                name: "Виброгаситель",
+                category: "accessories",
+                price: 350,
+                description: "Снижение вибрации ракетки",
+                emoji: "🔧"
+            },
+            {
+                id: 16,
+                name: "Напульсники (пара)",
+                category: "accessories",
+                price: 550,
+                description: "Впитывают влагу",
+                emoji: ""
+            }
+        ];
+
+        // Cart
+        let cart = [];
+        let selectedTime = null;
+        let selectedCourt = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts('all');
+            generateTimeSlots();
+        });
+
+        // Navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show target section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                window.scrollTo(0, 0);
+            }
+            
+            // Update hero section display
+            if (sectionId === 'home') {
+                targetSection.classList.add('hero');
+            } else {
+                targetSection.classList.remove('hero');
+            }
+        }
+
+        // Shop Functions
+        function filterProducts(category) {
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            renderProducts(category);
+        }
+
+        function renderProducts(category) {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+            
+            const filtered = category === 'all' 
+                ? products 
+                : products.filter(p => p.category === category);
+            
+            filtered.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-image">${product.emoji}</div>
+                    <div class="product-info">
+                        <div class="product-category">${getCategoryName(product.category)}</div>
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-description">${product.description}</div>
+                        <div class="product-footer">
+                            <div class="product-price">${product.price.toLocaleString()} ₽</div>
+                            <button class="add-to-cart" onclick="addToCart(${product.id})">
+                                В корзину
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function getCategoryName(category) {
+            const names = {
+                'rackets': 'Ракетки',
+                'balls': 'Мячи',
+                'clothing': 'Одежда',
+                'accessories': 'Аксессуары'
+            };
+            return names[category] || category;
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+            
+            updateCartCount();
+            showNotification('Товар добавлен в корзину!');
+        }
+
+        function updateCartCount() {
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+
+        function toggleCart() {
+            const modal = document.getElementById('cartModal');
+            modal.classList.toggle('active');
+            renderCart();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cartItems');
+            const emptyCart = document.getElementById('emptyCart');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            if (cart.length === 0) {
+                container.innerHTML = '';
+                emptyCart.style.display = 'block';
+                cartTotal.style.display = 'none';
+                return;
+            }
+            
+            emptyCart.style.display = 'none';
+            cartTotal.style.display = 'block';
+            container.innerHTML = '';
+            
+            let total = 0;
+            
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <div class="cart-item-image">${item.emoji}</div>
+                    <div class="cart-item-details">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">${item.price.toLocaleString()} ₽</div>
+                        <div class="cart-item-quantity">
+                            <button class="qty-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="qty-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                        </div>
+                    </div>
+                    <div class="remove-item" onclick="removeFromCart(${item.id})">🗑️</div>
+                `;
+                container.appendChild(cartItem);
+            });
+            
+            document.getElementById('totalPrice').textContent = total.toLocaleString();
+        }
+
+        function updateQuantity(productId, change) {
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    removeFromCart(productId);
+                } else {
+                    updateCartCount();
+                    renderCart();
+                }
+            }
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartCount();
+            renderCart();
+        }
+
+        function checkout() {
+            document.getElementById('checkoutModal').classList.add('active');
+            document.getElementById('cartModal').classList.remove('active');
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.getElementById('checkoutTotal').textContent = total.toLocaleString();
+        }
+
+        function closeCheckout() {
+            document.getElementById('checkoutModal').classList.remove('active');
+        }
+
+        function submitOrder(e) {
+            e.preventDefault();
+            alert('Заказ успешно оформлен! Мы свяжемся с вами для подтверждения.');
+            cart = [];
+            updateCartCount();
+            closeCheckout();
+        }
+
+        // Booking Functions
+        function generateTimeSlots() {
+            const container = document.getElementById('timeSlots');
+            const hours = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', 
+                          '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'];
+            
+            hours.forEach(time => {
+                const slot = document.createElement('div');
+                slot.className = 'time-slot';
+                slot.textContent = time;
+                slot.onclick = () => selectTime(slot);
+                
+                // Randomly mark some slots as booked
+                if (Math.random() < 0.3) {
+                    slot.classList.add('booked');
+                    slot.title = 'Уже забронировано';
+                }
+                
+                container.appendChild(slot);
+            });
+        }
+
+        function selectTime(slot) {
+            if (slot.classList.contains('booked')) return;
+            
+            document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+            slot.classList.add('selected');
+            selectedTime = slot.textContent;
+        }
+
+        function selectCourt(card) {
+            document.querySelectorAll('.court-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            selectedCourt = card.querySelector('h4').textContent;
+        }
+
+        function updateBooking() {
+            // Update prices based on service type
+        }
+
+        function submitBooking() {
+            const name = document.getElementById('bookingName').value;
+            const phone = document.getElementById('bookingPhone').value;
+            
+            if (!name || !phone || !selectedTime) {
+                alert('Пожалуйста, заполните все обязательные поля и выберите время');
+                return;
+            }
+            
+            const service = document.getElementById('serviceType');
+            const serviceName = service.options[service.selectedIndex].text;
+            
+            alert(`Запись подтверждена!\n\nУслуга: ${serviceName}\nКорт: ${selectedCourt || 'Корт №1'}\nВремя: ${selectedTime}\n\nМы отправили подтверждение на ваш телефон.`);
+        }
+
+        // Contact Form
+        function submitContactForm(e) {
+            e.preventDefault();
+            alert('Сообщение отправлено! Мы ответим вам в ближайшее время.');
+            e.target.reset();
+        }
+
+        // Notification
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -519,18 +1454,6 @@
                     });
                 }
             });
-        });
-
-        // Form submission
-        document.querySelector('form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Спасибо за заявку! Мы свяжемся с вами в ближайшее время.');
-            this.reset();
-        });
-
-        // Mobile menu toggle
-        document.querySelector('.mobile-menu').addEventListener('click', function() {
-            alert('Мобильное меню: используйте навигацию в шапке');
         });
     </script>
 
