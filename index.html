@@ -288,4 +288,251 @@
             color: white;
             text-align: center;
             padding: 2rem;
-       
+        }
+
+        .social-links {
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 1rem;
+            text-decoration: none;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu {
+                display: block;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-content p {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">🎾 PADEL MOMENT</div>
+            <ul class="nav-links">
+                <li><a href="#home">Главная</a></li>
+                <li><a href="#about">О нас</a></li>
+                <li><a href="#pricing">Цены</a></li>
+                <li><a href="#contact">Контакты</a></li>
+            </ul>
+            <div class="mobile-menu">☰</div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>PADEL MOMENT</h1>
+            <p>Премиум клуб падел-тенниса</p>
+            <a href="#contact" class="btn">Записаться</a>
+            <a href="#pricing" class="btn btn-outline">Наши цены</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <h2 class="section-title">Почему выбирают нас</h2>
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🏟️</div>
+                <h3>4 профессиональных корта</h3>
+                <p>Современное покрытие и освещение мирового класса</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👨‍</div>
+                <h3>Опытные тренеры</h3>
+                <p>Индивидуальный подход и профессиональные программы</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚿</div>
+                <h3>Комфортные раздевалки</h3>
+                <p>Душевые, сауна и зона отдыха</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏆</div>
+                <h3>Турниры и мероприятия</h3>
+                <p>Регулярные соревнования для всех уровней</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing">
+        <h2 class="section-title">Наши цены</h2>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Аренда корта</h3>
+                <div class="price">2 000 ₽<span>/час</span></div>
+                <ul>
+                    <li>Аренда корта на 1 час</li>
+                    <li>Ракетки и мячи включены</li>
+                    <li>Душевые и раздевалки</li>
+                    <li>Парковка</li>
+                </ul>
+                <a href="#contact" class="btn">Забронировать</a>
+            </div>
+            
+            <div class="pricing-card featured">
+                <h3>С тренером</h3>
+                <div class="price">12 000 ₽<span>/час</span></div>
+                <ul>
+                    <li>Индивидуальная тренировка</li>
+                    <li>Профессиональный тренер</li>
+                    <li>Персональная программа</li>
+                    <li>Анализ техники</li>
+                    <li>Все принадлежности включены</li>
+                </ul>
+                <a href="#contact" class="btn">Записаться</a>
+            </div>
+            
+            <div class="pricing-card">
+                <h3>Групповые занятия</h3>
+                <div class="price">800 ₽<span>/час с человека</span></div>
+                <ul>
+                    <li>Группа до 6 человек</li>
+                    <li>Опытный инструктор</li>
+                    <li>Идеально для новичков</li>
+                    <li>Весело и эффективно</li>
+                </ul>
+                <a href="#contact" class="btn">Записаться</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <h2 class="section-title">Свяжитесь с нами</h2>
+        <div class="contact-content">
+            <div class="contact-info">
+                <h3>Контактная информация</h3>
+                <div class="contact-item">
+                    <span>📍</span>
+                    <div>
+                        <strong>Адрес:</strong><br>
+                        г. Москва, ул. Спортивная, 15
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <span>📞</span>
+                    <div>
+                        <strong>Телефон:</strong><br>
+                        +7 (999) 123-45-67
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <span>✉️</span>
+                    <div>
+                        <strong>Email:</strong><br>
+                        info@padelmoment.ru
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <span>🕐</span>
+                    <div>
+                        <strong>Режим работы:</strong><br>
+                        Ежедневно: 10:00 - 22:00
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contact-form">
+                <h3>Записаться на игру</h3>
+                <form>
+                    <div class="form-group">
+                        <label>Ваше имя</label>
+                        <input type="text" placeholder="Иван Иванов" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Телефон</label>
+                        <input type="tel" placeholder="+7 (___) ___-__-__" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Тип услуги</label>
+                        <select required>
+                            <option value="">Выберите услугу</option>
+                            <option value="rental">Аренда корта (2 000 ₽/час)</option>
+                            <option value="trainer">С тренером (12 000 ₽/час)</option>
+                            <option value="group">Групповое занятие (800 ₽/час)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Желаемая дата и время</label>
+                        <input type="datetime-local" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Комментарий</label>
+                        <textarea rows="3" placeholder="Дополнительная информация"></textarea>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%; border: none; cursor: pointer;">
+                        Отправить заявку
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 PADEL MOMENT. Все права защищены.</p>
+        <div class="social-links">
+            <a href="#">📘</a>
+            <a href="#">📸</a>
+            <a href="#">🐦</a>
+            <a href="#">▶️</a>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Form submission
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Спасибо за заявку! Мы свяжемся с вами в ближайшее время.');
+            this.reset();
+        });
+
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu').addEventListener('click', function() {
+            alert('Мобильное меню: используйте навигацию в шапке');
+        });
+    </script>
+
+</body>
+</html>
